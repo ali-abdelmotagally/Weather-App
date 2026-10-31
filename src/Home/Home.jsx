@@ -16,9 +16,6 @@ import right_arrow from '../assets/right-arrow.svg'
 import moon from '../assets/moon.svg'
 
 
-
-
-
 export default function Home() {
     const [weatherData, setWeatherData] = useState(null);
     const [airQualityData, setAirQualityData] = useState(null);
