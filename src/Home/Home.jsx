@@ -296,7 +296,7 @@ return (
     </div>
 
      <div className="mb-6 w-full p-5 bg-black/30 rounded-2xl backdrop-blur-lg shadow-lg ">
-      <p className="">
+      <p className="sm:text-base whitespace-normal">
       <img className='w-6  pr-2 invert-75' src={rain_icon}></img>Chance of Rain</p>
       <p className="font-bold">{rainChance}%</p>
     </div>
