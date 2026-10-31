@@ -279,7 +279,7 @@ return (
 
     <div className="mb-6 w-full p-5 bg-black/30 rounded-2xl  backdrop-blur-lg shadow-lg ">
       <p className=""> 
-      <img className='w-5 invert-75' src={humidity}></img>Humditiy</p>
+      <img className='w-5 invert-75' src={humidity}></img>Humidity</p>
       <p className="font-bold">{humditiy}%</p>
     </div>
 
@@ -297,7 +297,7 @@ return (
 
      <div className="mb-6 w-full p-5 bg-black/30 rounded-2xl backdrop-blur-lg shadow-lg ">
       <p className="">
-      <img className='w-4 pt-3 invert-75' src={rain_icon}></img>Chance of Rain</p>
+      <img className='w-4 pt-3 px-2 invert-75' src={rain_icon}></img>Chance of Rain</p>
       <p className="font-bold">{rainChance}%</p>
     </div>
 
