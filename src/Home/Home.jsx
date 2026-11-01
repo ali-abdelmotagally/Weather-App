@@ -307,12 +307,12 @@ return (
     }
   }}
     placeholder="Search for a city..."
-    className="rounded-lg px-3 py-2 text-white/60 bg-black/40 backdrop-blur-lg focus:outline-none focus:ring-2 focus:border-white/50 focus:bg-black/60 transition duration-200 placeholder:text-white/50"
+    className="rounded-3xl px-3 py-2 text-white/60 bg-black/40 backdrop-blur-lg focus:outline-none focus:ring-2 focus:border-white/50 focus:bg-black/60 transition duration-200 placeholder:text-white/50"
   />
 
   <button
     onClick={searchCity}
-    className="cursor-pointer rounded-lg bg-black/40 px-4 py-2 text-white/60 hover:bg-black/60 hover:text-white/75 transition duration-200"
+    className="cursor-pointer rounded-3xl bg-black/40 px-4 py-2 text-white/60 hover:bg-black/60 hover:text-white/75 transition duration-200"
   >
     Search
   </button>
@@ -334,15 +334,26 @@ return (
 )}
 
 
-    <h1 className='text-white/75 opacity-80 text-5xl font-bold pt-20 text-center'> {actual_temp} °C</h1>
+    <h1 className={` ${timeOfDay  === 'morning' ?  "text-black/75" : "text-white/75"} opacity-80 text-5xl font-bold pt-20 text-center`}> {actual_temp} °C</h1>
 
     
-    <p className='flex justify-center gap-1 text-white/75 opacity-80 text-md font-semibold pt-2 text-center'>
-    <img className='w-5 invert-75' src={Location}></img>
-    {location.name}, {location.country}
-    </p>
+    <p
+  className={`flex justify-center gap-1 ${
+    timeOfDay === "morning" ? "text-black/75" : "text-white/75"
+  } opacity-80 text-md font-semibold pt-2 text-center`}
+>
+  <img
+    className={`w-5 ${
+      timeOfDay === "morning" ? "invert-35" : "invert-75"
+    }`}
+    src={Location}
+    alt="Location"
+  />
 
-    <p className='text-center pt-2 text-lg text-white/80 opacity-80 font-bold'>{weatherDescriptions[weatherCode] ?? "Unknown"} 
+  {location.name}, {location.country}
+</p>
+
+    <p className={`text-center pt-2 text-lg ${timeOfDay === 'morning' ?  "text-black/75" : "text-white/75"} opacity-80 font-bold`}>{weatherDescriptions[weatherCode] ?? "Unknown"} 
     <a href='https://www.nodc.noaa.gov/archive/arc0021/0002199/1.1/data/0-data/HTML/WMO-CODE/WMO4677.HTM'
     target='blank'
     className='font-thin'> *
@@ -350,10 +361,7 @@ return (
     </p>
 
 
-
-    
-
-    <div className="text-white/80 text-sm mx-auto mt-3 flex justify-center gap-4 font-thin">
+    <div className={` ${timeOfDay  === 'morning' ?  "text-black/75" : "text-white/75"} text-sm mx-auto mt-3 flex justify-center gap-4 font-thin`}>
     <div className="">Latitude {lat}</div>
     <div className="">Longitude {long}</div>
     </div>
@@ -362,7 +370,7 @@ return (
 
 {/* cards */}
 
-<div className="mt-6 w-[80%] mx-auto grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 justify-items-center whitespace-nowrap text-white/75 gap-4">
+<div className="mt-6 w-[80%] mx-auto grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 justify-items-center whitespace-nowrap gap-4 text-white/75">
 
     <div className="mb-6 w-full p-5 bg-black/30 rounded-2xl  backdrop-blur-lg shadow-lg ">
       <p className=""> 
