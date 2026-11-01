@@ -331,14 +331,12 @@ return (
     </div>
   </div>
 
+
   {/* air quality */}
 
-   
+   <div className="w-[80%] grid grid-cols-1 md:grid-cols-[2fr_2fr] gap-4 mx-auto text-white/80">
 
-   <div className="w-[80%] grid grid-cols-[2fr_2fr] gap-4 mx-auto text-white/80">
-
-
-  <div className="bg-black/30 backdrop-blur-lg border border-white/10 rounded-2xl px-4 pt-2 pb-4">
+    <div className="bg-black/30 backdrop-blur-lg border border-white/10 rounded-2xl px-4 pt-2 pb-4 min-w-5rem">
     <p className='font-bold'>Air Quality</p>
     <p className='pt-2'>{category} <strong>{aqi}</strong></p>
 
@@ -355,10 +353,10 @@ return (
     </div>
   </div>
 
-  <div className="bg-black/30 backdrop-blur-lg border border-white/10 rounded-2xl px-4 pt-2">
+  <div className="bg-black/30 backdrop-blur-lg border border-white/10 rounded-2xl px-4 pt-2 pb-4">
     <div className="flex gap-2 items-center">
     <p className='font-bold'>Moon Phase</p> 
-    <img className='w-5 invert-80' src={moon}></img>
+    <img className='w-5 invert' src={moon}></img>
     </div>
   
     <p className='pt-4'>{moonPhaseName}</p>
