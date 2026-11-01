@@ -21,6 +21,19 @@ export default function Home() {
     const [airQualityData, setAirQualityData] = useState(null);
     const [Loading, setLoading] = useState(true)
 
+    // added city search
+    const [citySearch, setCitySearch] = useState("");
+    const [cityResults, setCityResults] = useState([]);
+
+
+    //default city
+    const [location, setLocation] = useState({
+    name: "Assiut",
+    country: "Egypt",
+    latitude: 27.18096,
+    longitude: 31.18368,
+    });
+
     // getting current hour
     const currentHour = weatherData?.current.time.slice(0, 13) + ":00";
     const hourIndex = weatherData?.hourly.time.indexOf(currentHour);
@@ -38,6 +51,36 @@ export default function Home() {
     const visibility = hourIndex >= 0 ? weatherData?.hourly.visibility[hourIndex] : null;
     const dewPoint = weatherData?.hourly.dew_point_2m[hourIndex];
     const moonPhase = weatherData?.daily.moon_phase[0]
+
+
+  // city search function
+  async function searchCity() {
+  if (citySearch.trim().length < 2) return;
+
+  try {
+    const response = await fetch(
+      `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(citySearch)}&count=5&language=en`
+    );
+
+    const data = await response.json();
+
+    setCityResults(data.results ?? []);
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+
+function selectCity(city) {
+  setLocation({
+    name: city.name,
+    country: city.country,
+    latitude: city.latitude,
+    longitude: city.longitude,
+  });
+
+  setCitySearch("");
+  setCityResults([]);
+}
     
   //moon phases meaning
   function getMoonPhase(phase) {
@@ -148,11 +191,11 @@ export default function Home() {
 useEffect(() => {
  async function getWeather(){
   try{
-    const weatherUrl =
-  "https://api.open-meteo.com/v1/forecast?latitude=30.0444&longitude=31.2357&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,precipitation,rain,showers,snowfall,weather_code,cloud_cover,pressure_msl,surface_pressure,wind_speed_10m,wind_direction_10m,wind_gusts_10m&hourly=temperature_2m,relative_humidity_2m,dew_point_2m,apparent_temperature,precipitation_probability,precipitation,rain,showers,snowfall,weather_code,pressure_msl,surface_pressure,cloud_cover,cloud_cover_low,cloud_cover_mid,cloud_cover_high,visibility,uv_index,wind_speed_10m,wind_direction_10m,wind_gusts_10m&daily=weather_code,temperature_2m_max,temperature_2m_min,moon_phase,apparent_temperature_max,apparent_temperature_min,sunrise,sunset,daylight_duration,sunshine_duration,uv_index_max,rain_sum,precipitation_sum,precipitation_hours,precipitation_probability_max,wind_speed_10m_max,wind_gusts_10m_max,wind_direction_10m_dominant&timezone=auto&forecast_days=7";
+  const weatherUrl =
+  `https://api.open-meteo.com/v1/forecast?latitude=${location.latitude}&longitude=${location.longitude}&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,precipitation,rain,showers,snowfall,weather_code,cloud_cover,pressure_msl,surface_pressure,wind_speed_10m,wind_direction_10m,wind_gusts_10m&hourly=temperature_2m,relative_humidity_2m,dew_point_2m,apparent_temperature,precipitation_probability,precipitation,rain,showers,snowfall,weather_code,pressure_msl,surface_pressure,cloud_cover,cloud_cover_low,cloud_cover_mid,cloud_cover_high,visibility,uv_index,wind_speed_10m,wind_direction_10m,wind_gusts_10m&daily=weather_code,temperature_2m_max,temperature_2m_min,moon_phase,apparent_temperature_max,apparent_temperature_min,sunrise,sunset,daylight_duration,sunshine_duration,uv_index_max,rain_sum,precipitation_sum,precipitation_hours,precipitation_probability_max,wind_speed_10m_max,wind_gusts_10m_max,wind_direction_10m_dominant&timezone=auto&forecast_days=7`;
 
-    const airQualityUrl =
-    "https://air-quality-api.open-meteo.com/v1/air-quality?latitude=30.0444&longitude=31.2357&current=us_aqi,european_aqi,pm10,pm2_5,carbon_monoxide,nitrogen_dioxide,sulphur_dioxide,ozone&timezone=auto";
+  const airQualityUrl =
+  `https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${location.latitude}&longitude=${location.longitude}&current=us_aqi,european_aqi,pm10,pm2_5,carbon_monoxide,nitrogen_dioxide,sulphur_dioxide,ozone&timezone=auto`;
 
      const [weatherResponse, airQualityResponse] = await Promise.all([
       fetch(weatherUrl),
@@ -188,7 +231,7 @@ getWeather();
     const interval = setInterval(getWeather, 5 * 60 * 1000); // updates weather data every 5 minutes
 
    return () => clearInterval(interval);
-}, [])
+}, [location.latitude, location.longitude])
 
 // know the time
 function getTimeOfDay(weatherData) {
@@ -242,12 +285,53 @@ return (
     backgroundImage: `url(${backgrounds[timeOfDay]})`
   }}
 >
-    {/* <h1 className="text-white text-3xl text-center pt-8 font-semibold">
-      Weather App
-    </h1> */}
+
+  {/* search bar UI */}
+  <div className="flex justify-center gap-2 pt-6 ">
+ <input
+  value={citySearch}
+  onChange={(e) => {
+    setCitySearch(e.target.value);
+
+    if (e.target.value.trim() === "") {
+      setCityResults([]);
+    }
+  }}
+    placeholder="Search for a city..."
+    className="rounded-lg px-3 py-2 text-white/60 bg-black/40 backdrop-blur-lg focus:outline-none focus:ring-2 focus:border-white/50 focus:bg-black/60 transition duration-200 placeholder:text-white/50"
+  />
+
+  <button
+    onClick={searchCity}
+    className="cursor-pointer rounded-lg bg-black/40 px-4 py-2 text-white/60 hover:bg-black/60 hover:text-white/75 transition duration-200"
+  >
+    Search
+  </button>
+</div>
+
+{cityResults.length > 0 && (
+  <div className="bg-black/30 w-fit mx-auto p-4 rounded-xl backdrop-blur-2xl shadow-lg text-white/60 text-center mt-2">
+    {cityResults.map((city) => (
+      <button
+        key={city.id}
+        onClick={() => selectCity(city)}
+        className="block mx-auto p-2 hover:bg-black/30 rounded-lg w-full"
+      >
+        {city.name}, {city.country}
+        {city.admin1 && ` - ${city.admin1}`}
+      </button>
+    ))}
+  </div>
+)}
 
 
     <h1 className='text-white/75 opacity-80 text-5xl font-bold pt-20 text-center'> {actual_temp} °C</h1>
+
+    
+    <p className='flex justify-center gap-1 text-white/75 opacity-80 text-md font-semibold pt-2 text-center'>
+    <img className='w-5 invert-75' src={Location}></img>
+    {location.name}, {location.country}
+    </p>
 
     <p className='text-center pt-2 text-lg text-white/80 opacity-80 font-bold'>{weatherDescriptions[weatherCode] ?? "Unknown"} 
     <a href='https://www.nodc.noaa.gov/archive/arc0021/0002199/1.1/data/0-data/HTML/WMO-CODE/WMO4677.HTM'
@@ -257,10 +341,6 @@ return (
     </p>
 
 
-    <div className="text-white/75 text-lg font-semibold flex w-full justify-center mx-auto my-2 gap-1"> 
-    <img className='w-5 invert-75' src={Location}></img>
-    <p>Cairo, Egypt</p>
-    </div>
 
     
 
@@ -268,6 +348,10 @@ return (
     <div className="">Latitude {lat}</div>
     <div className="">Longitude {long}</div>
     </div>
+
+
+
+{/* cards */}
 
 <div className="mt-6 w-[80%] mx-auto grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 justify-items-center whitespace-nowrap text-white/75 gap-4">
 
