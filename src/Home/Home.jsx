@@ -296,7 +296,7 @@ return (
 >
 
   {/* search bar UI */}
-  <div className="flex justify-center gap-2 pt-6 ">
+  <div className="flex justify-center gap-2 pt-6">
  <input
   value={citySearch}
   onChange={(e) => {
@@ -390,7 +390,7 @@ return (
       <p className="font-bold">{windspeed} km/h</p>
     </div>
 
-    <div className="mb-6 w-full p-5 bg-black/30 rounded-2xl backdrop-blur-lg shadow-lg ">
+    <div className="mb-6 w-full pt-2 px-5 bg-black/30 rounded-2xl backdrop-blur-lg shadow-lg ">
       <p className="">
       <img className='w-8 invert-75' src={air_pressure}></img>Pressure</p>
       <p className="font-bold">{pressure} hPa</p>
