@@ -27,12 +27,21 @@ export default function Home() {
 
 
     //default city
-    const [location, setLocation] = useState({
-    name: "Assiut",
-    country: "Egypt",
-    latitude: 27.18096,
-    longitude: 31.18368,
-    });
+    const [location, setLocation] = useState(() => {
+  const savedLocation = localStorage.getItem("weatherLocation");
+
+  return savedLocation ? JSON.parse(savedLocation) : 
+      {
+        name: "Assiut",
+        country: "Egypt",
+        latitude: 27.18096,
+        longitude: 31.18368,
+      };
+});
+
+  useEffect(() => {
+  localStorage.setItem("weatherLocation", JSON.stringify(location));
+  }, [location]);
 
     // getting current hour
     const currentHour = weatherData?.current.time.slice(0, 13) + ":00";
